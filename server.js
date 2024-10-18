@@ -65,7 +65,7 @@ app.get('/professor', (req, res) => {
 
 app.get('/turmas/:professor_id', (req, res) => {
     const professor_id = req.params.professor_id
-    const query = 'SELECT nome FROM turmas WHERE professor_id = ?';
+    const query = 'SELECT id, nome FROM turmas WHERE professor_id = 1';
 
     connection.query(query, [professor_id], (erro, resultados) => {
         if (erro) {
@@ -73,7 +73,7 @@ app.get('/turmas/:professor_id', (req, res) => {
         }
 
         if (resultados.length > 0) {
-            const nomeTurmas = resultados.map(turma => turma.nome);
+            const nomeTurmas = resultados.map(turma => turma.id ,turma => turma.nome);
             return res.json({turmas: nomeTurmas});
         }else {
             return res.status(404).json({erro: 'Nenhuma turma encontrada para o professor'});

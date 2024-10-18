@@ -30,8 +30,27 @@ fetch(`http://localhost:3000/turmas/${professor_id}`)
         if (data.turmas && Array.isArray(data.turmas) && data.turmas.length > 0) {
             data.turmas.forEach((turma, index) => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td>${index + 1}</td><td>${turma}</td><td><button>Excluir</button><button>Visualizar</button></td>`;
+
+                // Aqui, você deve usar turma.id ou outro identificador da turma se disponível
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${turma.nome}</td>
+                    <td>
+                        <button id="BotaoExcluir" data-turma-id="${turma.id}">Excluir</button>
+                        <button id="BotaoVisualizar" data-turma-id="${turma.id}">Visualizar</button>
+                    </td>
+                `;
+
                 turmasBody.appendChild(row);
+
+                // Adicionando o event listener para excluir e visualizar
+                row.querySelector('#BotaoExcluir').addEventListener('click', () => {
+                    deletarTurma(turma.id); // Chame a função de deletar
+                });
+
+                row.querySelector('#BotaoVisualizar').addEventListener('click', () => {
+                    visualizarTurma(turma.id); // Chame a função de visualizar
+                });
             });
         } else {
             const row = document.createElement('tr');
@@ -41,5 +60,27 @@ fetch(`http://localhost:3000/turmas/${professor_id}`)
     }).catch(error => {
         console.error('Erro:', error);
         turmas.textContent = 'Erro ao carregar turmas.';
-    })
+    });
 
+
+function deletarTurma(turmaId) {
+    fetch(`http://localhost:3000/turmas/${turmaId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'aplication/json',
+        }
+    }).then(response => {
+        if(!response.ok){
+            throw new Error('Erro ao deletar turma');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('turma deletada', data);
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    })
+    
+}
