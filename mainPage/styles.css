@@ -62,18 +62,24 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
-button.excluir {
+#BotaoExcluir {
     background-color: red;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
-button.visualizar {
+#BotaoVisualizar {
     background-color: green;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
 }

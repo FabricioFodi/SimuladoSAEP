@@ -64,22 +64,44 @@ app.get('/professor', (req, res) => {
 });
 
 app.get('/turmas/:professor_id', (req, res) => {
-    const professor_id = req.params.professor_id
-    const query = 'SELECT id, nome FROM turmas WHERE professor_id = 1';
+    const professor_id = req.params.professor_id;
+    const query = 'SELECT id, nome FROM turmas WHERE professor_id = ?'; // Usando ? para prevenir SQL Injection
 
     connection.query(query, [professor_id], (erro, resultados) => {
         if (erro) {
-            return res.status(500).json({erro: erro.message});
+            return res.status(500).json({ erro: erro.message });
         }
 
         if (resultados.length > 0) {
-            const nomeTurmas = resultados.map(turma => turma.id ,turma => turma.nome);
-            return res.json({turmas: nomeTurmas});
-        }else {
-            return res.status(404).json({erro: 'Nenhuma turma encontrada para o professor'});
+            // Corrigindo o mapeamento para retornar um array de objetos
+            const nomeTurmas = resultados.map(turma => ({
+                id: turma.id,
+                nome: turma.nome
+            }));
+            return res.json({ turmas: nomeTurmas });
+        } else {
+            return res.status(404).json({ erro: 'Nenhuma turma encontrada para o professor' });
+
         }
     });
-})
+});
+
+app.delete('/turmas/:professor_id/:turma_id', (req, res) => {
+    const { professor_id, turma_id } = req.params;
+    const query = 'DELETE FROM turmas WHERE professor_id = ? AND id = ?';
+
+    connection.query(query, [professor_id, turma_id], (erro, resultados) => {
+        if(erro) {
+            return res.status(500).json({erro: erro.message});
+        }
+
+        if(resultados.affectedRows > 0) {
+            return res.json({message: 'Turma deletada com sucesso!'});
+        } else {
+            return res.status(404).json({erro: 'Turma não encontrada para deletar'});
+        }
+    });
+});
 
 // Iniciar o servidor
 app.listen(PORT, () => {

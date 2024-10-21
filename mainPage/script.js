@@ -64,10 +64,10 @@ fetch(`http://localhost:3000/turmas/${professor_id}`)
 
 
 function deletarTurma(turmaId) {
-    fetch(`http://localhost:3000/turmas/${turmaId}`, {
+    fetch(`http://localhost:3000/turmas/${professor_id}/${turmaId}`, { 
         method: 'DELETE',
         headers: {
-            'Content-Type': 'aplication/json',
+            'Content-Type': 'application/json',
         }
     }).then(response => {
         if(!response.ok){
