@@ -23,6 +23,7 @@ Botao.addEventListener('click', (e) => {
     .then(data => {
         if (data.sucesso) {
             console.log('Login bem-sucedido!');
+            localStorage.setItem('professor_id', data.professor_id);
             window.location.href = '/mainPage/index.html'; // Redirecionar para a página principal ou dashboard
         } else {
             alert('Usuário ou senha incorretos.');
