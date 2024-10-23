@@ -1,3 +1,4 @@
 *.ico
 *.json
 node_modules
+.txt
