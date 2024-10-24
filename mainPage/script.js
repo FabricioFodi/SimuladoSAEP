@@ -31,6 +31,8 @@ function carregarTurmas() {
             }
             return response.json();
         }).then(data => {
+            btnCadastrar.textContent = 'Cadastrar Turma';
+            btnCadastrar.onclick = () => cadastrarTurma();
             turmasBody.innerHTML = '';  // Limpar a tabela
             div.textContent = '';  // Limpar o nome da turma
             trNome.textContent = 'Nome da Turma';
@@ -142,7 +144,8 @@ function visualizarTurma(turmaId) {
             turmasBody.appendChild(row);
 
             // botão "Cadastrar Atividade"
-            btnCadastrar.addEventListener('click', () => cadastrarAtividade(turmaId));
+            btnCadastrar.onclick = () => cadastrarAtividade(turmaId);
+            //btnCadastrar.addEventListener('click', cadastrarAtividade(turmaId)); //Assim estava dando erro
 
             // botão "Voltar"
             document.getElementById('botaoVoltar').addEventListener('click', carregarTurmas);
@@ -153,8 +156,7 @@ function visualizarTurma(turmaId) {
         });
 }
 
-
-// Função para cadastrar uma nova atividade (exemplo simples)
+// Função para cadastrar uma nova atividade
 function cadastrarAtividade(turmaId) {
     const descricaoAtividade = prompt('Digite a descrição da nova atividade:');
     
@@ -190,5 +192,27 @@ function cadastrarAtividade(turmaId) {
     })
     .catch(error => {
         console.error('Erro ao cadastrar atividade:', error);
+    });
+}
+
+// Botão "Cadastrar Turma"
+function cadastrarTurma(){
+    const novaTurma = prompt('Digite o nome da nova turma:');
+    fetch(`http://localhost:3000/turmas/${professor_id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nome: novaTurma })
+    }).then(response => {
+        if(!response.ok){
+            throw new Error('Erro ao cadastrar turma');
+        } 
+        return response.json();
+    }).then(data => {
+        console.log('Turma Cadastrada', data);
+        window.location.reload();
+    }).catch(error => {
+        console.error('erro: ', error);
     });
 }

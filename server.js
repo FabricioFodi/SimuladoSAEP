@@ -117,6 +117,8 @@ app.delete('/turmas/:professor_id/:turma_id', (req, res) => {
     });
 });
 
+
+//Coleta as informações das atividades da turma
 app.get('/turmas/:professor_id/:turma_id/atividades', (req, res) => {
     const { professor_id, turma_id } = req.params;
     const query = 'SELECT id, descricao FROM atividades WHERE professor_id = ? AND turma_id = ?';
@@ -133,6 +135,7 @@ app.get('/turmas/:professor_id/:turma_id/atividades', (req, res) => {
     })
 });
 
+//Posta as atividades da turma
 app.post('/turmas/:professor_id/:turma_id/atividades', (req, res) => {
     const { professor_id, turma_id } = req.params;
     const { descricao } = req.body;
@@ -149,7 +152,22 @@ app.post('/turmas/:professor_id/:turma_id/atividades', (req, res) => {
     });
 });
 
+//Cria uma nova turma
+app.post('/turmas/:professor_id', (req, res) => {
+    const { professor_id } = req.params;
+    const { nome } = req.body;
 
+    const query = 'INSERT INTO turmas (nome, professor_id) VALUES (?, ?)';
+
+    connection.query(query, [nome, professor_id], (erro, resultados) => {
+        if(erro) {
+            console.error('Erro no banco de dados: ', erro);
+            return res.status(500).json({ erro: erro.message });
+        } else {
+            return res.status(201).json({ id: resultados.insertId, nome, professor_id});
+        }
+    });
+});
 
 // Iniciar o servidor
 app.listen(PORT, () => {
