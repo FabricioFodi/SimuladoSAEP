@@ -1,4 +1,4 @@
-Salvando aqui por que no MySQL some o arquivo.
+-- Salvando aqui por que no MySQL some o arquivo.
 
 CREATE DATABASE provasaep;
 USE provasaep;
